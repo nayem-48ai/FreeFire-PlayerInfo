@@ -8,14 +8,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 async function build() {
   const outdir = path.join(__dirname, 'dist')
 
-  // Build JS
   await esbuild.build({
     entryPoints: [path.join(__dirname, 'src/main.jsx')],
     bundle: true,
     outdir,
     jsx: 'automatic',
     jsxImportSource: 'react',
-    format: 'esm',
+    format: 'iife',
     minify: true,
     sourcemap: false,
     target: ['es2020'],
@@ -34,8 +33,9 @@ async function build() {
     },
   })
 
-  // Copy index.html
   let html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8')
+  html = html.replace('</head>', '  <link rel="stylesheet" href="/main.css">\n</head>')
+  html = html.replace('</body>', '  <script src="/main.js"></script>\n</body>')
   fs.writeFileSync(path.join(outdir, 'index.html'), html)
 
   console.log('Build complete! Output in:', outdir)
