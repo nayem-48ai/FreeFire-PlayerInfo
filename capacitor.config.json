@@ -1,0 +1,14 @@
+{
+  "appId": "com.freefire.playerinfo",
+  "appName": "Free Fire PlayerInfo",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "CapacitorHttp": {
+      "enabled": true
+    }
+  }
+}

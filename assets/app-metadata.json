@@ -1,0 +1,8 @@
+{
+  "appName": "Free Fire PlayerInfo",
+  "appPackage": "com.freefire.playerinfo",
+  "versionName": "1.0.0",
+  "versionCode": 1,
+  "updateJsonUrl": "https://raw.githubusercontent.com/nayem-48ai/FreeFire-PlayerInfo/main/update.json",
+  "permissions": ["INTERNET"]
+}
