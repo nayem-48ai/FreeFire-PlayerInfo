@@ -1,3 +1,4 @@
+// Change this to your deployed Render URL
 const API_BASE = 'https://freefire-api-six.vercel.app'
 const FALLBACK_URL = 'https://freefireinfo.in/get-free-fire-account-information-via-uid/'
 

@@ -167,7 +167,7 @@ def handle_personal_show():
         if status_code != 200:
             return jsonify({"status": "error", "error": err.decode() if err else f"HTTP {status_code}"}), status_code
 
-        return jsonify({"status": "success", "data": data})
+        return jsonify(data)
     except Exception as e:
         return jsonify({"status": "error", "error": str(e)}), 500
 

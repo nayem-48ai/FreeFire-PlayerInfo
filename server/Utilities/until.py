@@ -49,8 +49,58 @@ def encode_protobuf(data: dict, proto_message: Message) -> bytes:
     except Exception as e:
         raise Exception(f"Proto conversion failed: {str(e)}")
 
-def decode_protobuf(encoded_data: bytes, message_type: message.Message) -> message.Message:
+KEY_MAP = {
+    "accountid": "accountId", "accounttype": "accountType", "nickname": "nickname",
+    "externalid": "externalId", "clanname": "clanName", "rankingpoints": "rankingPoints",
+    "haselitepass": "hasElitePass", "badgecnt": "badgeCnt", "badgeid": "badgeId",
+    "seasonid": "seasonId", "lastloginat": "lastLoginAt", "externaluid": "externalUid",
+    "returnat": "returnAt", "championshipteamname": "championshipTeamName",
+    "csrank": "csRank", "csrankingpoints": "csRankingPoints", "weaponskinshows": "weaponSkinShows",
+    "pinid": "pinId", "iscsrankingban": "isCsRankingBan", "maxrank": "maxRank",
+    "csmaxrank": "csMaxRank", "maxrankingpoints": "maxRankingPoints",
+    "gamebagshow": "gameBagShow", "peakrankpos": "peakRankPos",
+    "cspeakrankpos": "csPeakRankPos", "accountprefers": "accountPrefers",
+    "periodicrankingpoints": "periodicRankingPoints", "createat": "createAt",
+    "veteranleavedaystag": "veteranLeaveDaysTag", "selecteditemslots": "selectedItemSlots",
+    "preveterantype": "preVeteranType", "externaliconinfo": "externalIconInfo",
+    "releaseversion": "releaseVersion", "veteranexpiretime": "veteranExpireTime",
+    "showbrrank": "showBrRank", "showcsrank": "showCsRank", "clanbadgeid": "clanBadgeId",
+    "customclanbadge": "customClanBadge", "usecustomclanbadge": "useCustomClanBadge",
+    "clanframeid": "clanFrameId", "membershipstate": "membershipState",
+    "selectoccupations": "selectOccupations", "itemtaginfo": "itemTagInfo",
+    "ranksort": "rankSort", "csranksort": "csRankSort", "hipporank": "hippoRank",
+    "hipporankingpoints": "hippoRankingPoints", "hippomaxrank": "hippoMaxRank",
+    "showhipporank": "showHippoRank", "hippototalprofit": "hippoTotalProfit",
+    "hippototalworth": "hippoTotalWorth", "modestatsinfos": "modeStatsInfos",
+    "badgeinfo": "badgeInfo", "primeprivilegedetail": "primePrivilegeDetail",
+    "cspeakpoints": "csPeakPoints", "displaycspeakpoint": "displayCsPeakPoint",
+    "avatarframe": "avatarFrame", "avatarid": "avatarId", "skincolor": "skinColor",
+    "equipedskills": "equipedSkills", "isselected": "isSelected",
+    "pveprimaryweapon": "pvePrimaryWeapon", "isselectedawaken": "isSelectedAwaken",
+    "endtime": "endTime", "unlocktype": "unlockType", "unlocktime": "unlockTime",
+    "ismarkedstar": "isMarkedStar", "rankingleaderboardpos": "rankingLeaderboardPos",
+    "historyepinfo": "historyEpInfo", "clanbasicinfo": "clanBasicInfo",
+    "captainbasicinfo": "captainBasicInfo", "petinfo": "petInfo", "socialinfo": "socialInfo",
+    "diamondcostres": "diamondCostRes", "creditscoreinfo": "creditScoreInfo",
+    "modestatssummaryinfo": "modeStatsSummaryInfo", "mmrlist": "mmrList",
+    "user_spark_info": "userSparkInfo", "collab_spark_info": "collabSparkInfo",
+    "collection_custom_list": "collectionCustomList", "workshop_summary_info": "workshopSummaryInfo",
+    "spark_info": "sparkInfo", "social_basic_info": "socialBasicInfo",
+    "basicinfo": "basicInfo", "profileinfo": "profileInfo", "news": "news",
+    "clanid": "clanId", "membernum": "memberNum", "capacity": "capacity",
+    "clanlevel": "clanLevel", "credit_score": "creditScore", "rewardstate": "rewardState",
+    "rewardtype": "rewardType",
+}
+
+def _transform_keys(obj):
+    if isinstance(obj, dict):
+        return {KEY_MAP.get(k, k): _transform_keys(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_transform_keys(i) for i in obj]
+    return obj
+
+def decode_protobuf(encoded_data: bytes, message_type: message.Message) -> dict:
     instance = message_type()
     instance.ParseFromString(encoded_data)
-    return json.loads(json_format.MessageToJson(instance))
+    return _transform_keys(json.loads(json_format.MessageToJson(instance)))
     
